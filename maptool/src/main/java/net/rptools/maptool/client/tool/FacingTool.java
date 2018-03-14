@@ -31,6 +31,11 @@ import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.GUID;
 import net.rptools.maptool.model.Token;
 import net.rptools.maptool.util.TokenUtil;
+import net.rptools.lib.image.ImageUtil;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import java.io.IOException;
+import javax.swing.SwingUtilities;
 
 /**
  */
@@ -42,7 +47,11 @@ public class FacingTool extends DefaultTool {
 	private Set<GUID> selectedTokenSet;
 
 	public FacingTool() {
-		// Non tool-bar tool ... atm
+		/*try {
+			setIcon(new ImageIcon(ImageUtil.getImage("net/rptools/maptool/client/image/tool/stamper.png")));
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}*/
 	}
 
 	public void init(Token keyToken, Set<GUID> selectedTokenSet) {
@@ -81,36 +90,42 @@ public class FacingTool extends DefaultTool {
 			}
 		});
 	}
-
-	////
-	// MOUSE
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		super.mouseMoved(e);
-
-		if (tokenUnderMouse == null || renderer.getTokenBounds(tokenUnderMouse) == null) {
-			return;
-		}
-		Rectangle bounds = renderer.getTokenBounds(tokenUnderMouse).getBounds();
-
-		int x = bounds.x + bounds.width / 2;
-		int y = bounds.y + bounds.height / 2;
-
-		double angle = Math.atan2(y - e.getY(), e.getX() - x);
-
-		int degrees = (int) Math.toDegrees(angle);
-
-		if (!SwingUtil.isControlDown(e)) {
-			int[] facingAngles = renderer.getZone().getGrid().getFacingAngles();
-			degrees = facingAngles[TokenUtil.getIndexNearestTo(facingAngles, degrees)];
-		}
+	
+	
+	public void facePosition(int posX, int posY, boolean snapToGrid) {		
 		Area visibleArea = null;
 		Set<GUID> remoteSelected = new HashSet<GUID>();
+		this.selectedTokenSet = renderer.getOwnedTokens(renderer.getSelectedTokenSet()); // ? renderer.getSelectedTokenSet();
+		if (selectedTokenSet.isEmpty()) {
+			resetTool();
+			return;
+		}
 		for (GUID tokenGUID : selectedTokenSet) {
 			Token token = renderer.getZone().getToken(tokenGUID);
 			if (token == null) {
 				continue;
+			}			
+			
+			Area areaBounds = renderer.getTokenBounds(token);
+			if (areaBounds == null) {
+				// token is offscreen
+				continue;
 			}
+			
+			Rectangle bounds = areaBounds.getBounds();
+
+			int x = bounds.x + bounds.width / 2;
+			int y = bounds.y + bounds.height / 2;
+
+			double angle = Math.atan2(y - posY, posX - x);
+
+			int degrees = (int) Math.toDegrees(angle);
+
+			if (snapToGrid) {
+				int[] facingAngles = renderer.getZone().getGrid().getFacingAngles();
+				degrees = facingAngles[TokenUtil.getIndexNearestTo(facingAngles, degrees)];
+			}
+			
 			token.setFacing(degrees);
 			// if has fog(required) 
 			// and ((isGM with pref set) OR serverPolicy allows auto reveal by players)
@@ -126,24 +141,67 @@ public class FacingTool extends DefaultTool {
 		renderer.repaint(); // TODO: shrink this
 	}
 
+	////
+	// MOUSE
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// Commit
+	public void mouseMoved(MouseEvent e) {
+		super.mouseMoved(e);
+		
+		facePosition(e.getX(), e.getY(), !SwingUtil.isControlDown(e));
+		
+		/*Area visibleArea = null;
+		Set<GUID> remoteSelected = new HashSet<GUID>();
+		this.selectedTokenSet = renderer.getSelectedTokenSet(); // ? renderer.getOwnedTokens(renderer.getSelectedTokenSet());
+		if (selectedTokenSet.isEmpty()) {
+			return;
+		}
 		for (GUID tokenGUID : selectedTokenSet) {
 			Token token = renderer.getZone().getToken(tokenGUID);
 			if (token == null) {
 				continue;
+			}			
+			
+			Rectangle bounds = renderer.getTokenBounds(token).getBounds();
+
+			int x = bounds.x + bounds.width / 2;
+			int y = bounds.y + bounds.height / 2;
+
+			double angle = Math.atan2(y - e.getY(), e.getX() - x);
+
+			int degrees = (int) Math.toDegrees(angle);
+
+			if (!SwingUtil.isControlDown(e)) {
+				int[] facingAngles = renderer.getZone().getGrid().getFacingAngles();
+				degrees = facingAngles[TokenUtil.getIndexNearestTo(facingAngles, degrees)];
 			}
-			renderer.flush(token);
-			MapTool.serverCommand().putToken(renderer.getZone().getId(), token);
+			
+			token.setFacing(degrees);
+			// if has fog(required) 
+			// and ((isGM with pref set) OR serverPolicy allows auto reveal by players)
+			if (renderer.getZone().hasFog() && ((AppPreferences.getAutoRevealVisionOnGMMovement() && MapTool.getPlayer().isGM())) || MapTool.getServerPolicy().isAutoRevealOnMovement()) {
+				visibleArea = renderer.getZoneView().getVisibleArea(token);
+				remoteSelected.add(token.getId());
+				renderer.getZone().exposeArea(visibleArea, token);
+			}
+			renderer.flushFog();
 		}
+		// XXX Instead of calling exposeFoW() when visibleArea is null, shouldn't we just skip it?
+		MapTool.serverCommand().exposeFoW(renderer.getZone().getId(), visibleArea == null ? new Area() : visibleArea, remoteSelected);
+		renderer.repaint(); // TODO: shrink this*/
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		
+		facePosition(e.getX(), e.getY(), !SwingUtil.isControlDown(e));
+		
 		// Go back to the pointer tool
 		resetTool();
 	}
 
 	@Override
 	protected void resetTool() {
-		if (tokenUnderMouse.isStamp()) {
+		if (tokenUnderMouse != null && tokenUnderMouse.isStamp()) {
 			MapTool.getFrame().getToolbox().setSelectedTool(StampTool.class);
 		} else {
 			MapTool.getFrame().getToolbox().setSelectedTool(PointerTool.class);
