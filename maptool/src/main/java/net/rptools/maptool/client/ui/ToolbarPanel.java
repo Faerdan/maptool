@@ -147,6 +147,7 @@ public class ToolbarPanel extends JToolBar {
 
 	private OptionPanel createDrawPanel() {
 		OptionPanel panel = new OptionPanel();
+		//panel.add(FacingTool.class);
 		panel.add(FreehandTool.class);
 		panel.add(LineTool.class);
 		panel.add(RectangleTool.class);
