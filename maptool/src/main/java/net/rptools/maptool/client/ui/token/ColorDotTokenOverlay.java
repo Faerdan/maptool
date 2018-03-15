@@ -85,7 +85,7 @@ public class ColorDotTokenOverlay extends XTokenOverlay {
 			g.setStroke(getStroke());
 
 			double size = bounds.width * 0.2;
-			double offset = bounds.width * 0.8;
+			double offset = bounds.width * 0.75;
 			double x = 0;
 			double y = 0;
 			switch (corner) {

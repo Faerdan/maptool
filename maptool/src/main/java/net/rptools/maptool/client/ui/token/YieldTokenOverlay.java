@@ -68,8 +68,11 @@ public class YieldTokenOverlay extends XTokenOverlay {
 	 */
 	@Override
 	public void paintOverlay(Graphics2D g, Token aToken, Rectangle bounds) {
+		int horzMargin = BooleanTokenOverlay.GetHorizontalMargin(bounds);
+		int vertMargin = BooleanTokenOverlay.GetVerticalMargin(bounds);
+		
 		Double hc = (double) bounds.width / 2;
-		Double vc = bounds.height * 0.134;
+		Double vc = (double) vertMargin;
 		Color tempColor = g.getColor();
 		g.setColor(getColor());
 		Stroke tempStroke = g.getStroke();
@@ -77,9 +80,9 @@ public class YieldTokenOverlay extends XTokenOverlay {
 		Composite tempComposite = g.getComposite();
 		if (getOpacity() != 100)
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getOpacity() / 100));
-		g.draw(new Line2D.Double(0, vc, bounds.width, vc));
-		g.draw(new Line2D.Double(bounds.width, vc, hc, bounds.height));
-		g.draw(new Line2D.Double(hc, bounds.height, 0, vc));
+		g.draw(new Line2D.Double(horzMargin, vc, bounds.width - horzMargin, vc));
+		g.draw(new Line2D.Double(bounds.width - horzMargin, vc, hc, bounds.height - vertMargin));
+		g.draw(new Line2D.Double(hc, bounds.height - vertMargin, vertMargin, vc));
 		g.setColor(tempColor);
 		g.setStroke(tempStroke);
 		g.setComposite(tempComposite);

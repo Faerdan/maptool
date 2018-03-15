@@ -114,7 +114,18 @@ public class HollowRectangleTopologyTool extends AbstractDrawingTool implements 
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (rectangle == null) {
 				rectangle = new Rectangle(zp.x, zp.y, zp.x, zp.y);
-			} else {
+			}
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		ZonePoint zp = getPoint(e);
+
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			if (rectangle != null) {
 				rectangle.getEndPoint().x = zp.x;
 				rectangle.getEndPoint().y = zp.y;
 
@@ -143,7 +154,7 @@ public class HollowRectangleTopologyTool extends AbstractDrawingTool implements 
 			}
 			setIsEraser(isEraser(e));
 		}
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -151,10 +162,6 @@ public class HollowRectangleTopologyTool extends AbstractDrawingTool implements 
 		if (rectangle == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 		setIsEraser(isEraser(e));
 
 		ZonePoint p = getPoint(e);
@@ -166,7 +173,7 @@ public class HollowRectangleTopologyTool extends AbstractDrawingTool implements 
 			renderer.repaint();
 		}
 	}
-
+	
 	/**
 	 * Stop drawing a rectangle and repaint the zone.
 	 */

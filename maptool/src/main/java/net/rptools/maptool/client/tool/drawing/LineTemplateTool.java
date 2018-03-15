@@ -101,8 +101,7 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 	 */
 	@Override
 	protected void resetTool(ZonePoint aVertex) {
-		super.resetTool(aVertex);
-		pathAnchorSet = false;
+		super.resetTool(aVertex);	
 		((LineTemplate) template).setDoubleWide(AppState.useDoubleWideLine());
 	}
 
@@ -116,7 +115,7 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 	 */
 	@Override
 	public void paintOverlay(ZoneRenderer renderer, Graphics2D g) {
-		if (painting && renderer != null) {
+		if (/*painting &&*/ renderer != null) {
 			Pen pen = getPenForOverlay();
 			AffineTransform old = g.getTransform();
 			g.setTransform(getPaintTransform(renderer));
@@ -125,9 +124,9 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 			template.draw(g, pen);
 			Paint paint = pen.getPaint() != null ? pen.getPaint().getPaint() : null;
 			paintCursor(g, paint, pen.getThickness(), vertex);
-			if (pathVertex != null) {
+			/*if (pathVertex != null) {
 				paintCursor(g, paint, pen.getThickness(), pathVertex);
-			}
+			}*/
 			g.setTransform(old);
 			if (pathVertex != null) {
 				paintRadius(g, vertex);
@@ -141,22 +140,26 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 	@Override
 	protected int getRadiusAtMouse(MouseEvent aE) {
 		int radius = super.getRadiusAtMouse(aE);
-		return Math.max(0, radius - 1);
+		return Math.max(0, radius - 3);
 	}
 
 	/**
 	 * @see net.rptools.maptool.client.tool.drawing.RadiusTemplateTool#mousePressed(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void mousePressed(MouseEvent aE) {
-		if (!painting)
-			return;
+	public void mousePressed(MouseEvent e) {
+		/*if (!painting)
+			return;*/
 
-		if (SwingUtilities.isLeftMouseButton(aE)) {
+		if (SwingUtilities.isLeftMouseButton(e)) {
 
 			// Need to set the anchor?
 			controlOffset = null;
 			if (!anchorSet) {
+				LineTemplate lt = (LineTemplate) template;
+				ZonePoint pathVertex = lt.getPathVertex();
+				ZonePoint vertex = lt.getVertex();
+				setCellAtMouse(e, vertex);
 				anchorSet = true;
 				return;
 			} // endif
@@ -173,7 +176,12 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 		} // endif
 
 		// Let the radius code finish the template
-		super.mousePressed(aE);
+		super.mousePressed(e);
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		super.mouseReleased(e);
 	}
 
 	/**
@@ -185,68 +193,59 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 		LineTemplate lt = (LineTemplate) template;
 		ZonePoint pathVertex = lt.getPathVertex();
 		ZonePoint vertex = lt.getVertex();
+		
 		if (!anchorSet) {
 			setCellAtMouse(e, vertex);
 			controlOffset = null;
-
-			// Let control move the anchor
-		} else if (!pathAnchorSet && SwingUtil.isControlDown(e)) {
+			anchorSet = true;
+			return;
+		}
+		
+		if (SwingUtil.isControlDown(e)) {
 			handleControlOffset(e, vertex);
-
-			// Setting path anchor?
-		} else if (!pathAnchorSet) {
-			template.setRadius(getRadiusAtMouse(e));
+		} 
+		else
+		{		
 			controlOffset = null;
+		}
+		
+		template.setRadius(getRadiusAtMouse(e));
 
-			// The path vertex remains null until it is set the first time.
-			if (pathVertex == null) {
-				pathVertex = new ZonePoint(vertex.x, vertex.y);
-				lt.setPathVertex(pathVertex);
-			} // endif
-			if (pathVertex != null && setCellAtMouse(e, pathVertex))
-				lt.clearPath();
+		// The path vertex remains null until it is set the first time.
+		if (pathVertex == null) {
+			pathVertex = new ZonePoint(vertex.x, vertex.y);
+			lt.setPathVertex(pathVertex);
+		} // endif
+		if (pathVertex != null && setCellAtMouse(e, pathVertex))
+			lt.clearPath();
 
+		if (pathVertex != null) {
 			// Determine which of the extra squares are used on diagonals
-			if (pathVertex != null) {
-				double dx = pathVertex.x - vertex.x;
-				double dy = pathVertex.y - vertex.y;
-				if (dx != 0 && dy != 0) { // Ignore straight lines
-					boolean mouseSlopeGreater = false;
-					double m = Math.abs(dy / dx);
-					double edx = e.getX() - vertex.x;
-					double edy = e.getY() - vertex.y;
-					if (edx != 0 && edy != 0) { // Handle straight lines differently
-						double em = Math.abs(edy / edx);
-						mouseSlopeGreater = em > m;
-					} else if (edx == 0) {
-						mouseSlopeGreater = true;
-					} // endif
-					if (mouseSlopeGreater != lt.isMouseSlopeGreater()) {
-						lt.setMouseSlopeGreater(mouseSlopeGreater);
-						renderer.repaint();
-					} // endif
+			double dx = pathVertex.x - vertex.x;
+			double dy = pathVertex.y - vertex.y;
+			if (dx != 0 && dy != 0) { // Ignore straight lines
+				boolean mouseSlopeGreater = false;
+				double m = Math.abs(dy / dx);
+				double edx = e.getX() - vertex.x;
+				double edy = e.getY() - vertex.y;
+				if (edx != 0 && edy != 0) { // Handle straight lines differently
+					double em = Math.abs(edy / edx);
+					mouseSlopeGreater = em > m;
+				} else if (edx == 0) {
+					mouseSlopeGreater = true;
+				} // endif
+				if (mouseSlopeGreater != lt.isMouseSlopeGreater()) {
+					lt.setMouseSlopeGreater(mouseSlopeGreater);
+					renderer.repaint();
 				} // endif
 			} // endif
 
-			// Let control move the path anchor
-		} else if (SwingUtil.isControlDown(e)) {
-			handleControlOffset(e, pathVertex);
-
-			// Set the final radius
-		} else {
-			template.setRadius(getRadiusAtMouse(e));
-			renderer.repaint();
-			controlOffset = null;
-			return;
-		} // endif
-
-		// Quadrant change?
-		if (pathVertex != null) {
+			// Quadrant change?
 			ZonePoint mouse = new ScreenPoint(e.getX(), e.getY()).convertToZone(renderer);
-			int dx = mouse.x - vertex.x;
-			int dy = mouse.y - vertex.y;
-			AbstractTemplate.Quadrant quadrant = (dx < 0) ? (dy < 0 ? Quadrant.NORTH_WEST : Quadrant.SOUTH_WEST)
-					: (dy < 0 ? Quadrant.NORTH_EAST : Quadrant.SOUTH_EAST);
+			int rdx = mouse.x - vertex.x;
+			int rdy = mouse.y - vertex.y;
+			AbstractTemplate.Quadrant quadrant = (rdx < 0) ? (rdy < 0 ? Quadrant.NORTH_WEST : Quadrant.SOUTH_WEST)
+					: (rdy < 0 ? Quadrant.NORTH_EAST : Quadrant.SOUTH_EAST);
 			if (quadrant != lt.getQuadrant()) {
 				lt.setQuadrant(quadrant);
 				renderer.repaint();

@@ -68,8 +68,12 @@ public class TriangleTokenOverlay extends XTokenOverlay {
 	 */
 	@Override
 	public void paintOverlay(Graphics2D g, Token aToken, Rectangle bounds) {
+		int horzMargin = BooleanTokenOverlay.GetHorizontalMargin(bounds);
+		int vertMargin = BooleanTokenOverlay.GetVerticalMargin(bounds);
+		
 		Double hc = (double) bounds.width / 2;
-		Double vc = bounds.height * 0.866;
+		Double vc = (double) bounds.height - vertMargin;
+		
 		Color tempColor = g.getColor();
 		g.setColor(getColor());
 		Stroke tempStroke = g.getStroke();
@@ -77,9 +81,9 @@ public class TriangleTokenOverlay extends XTokenOverlay {
 		Composite tempComposite = g.getComposite();
 		if (getOpacity() != 100)
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getOpacity() / 100));
-		g.draw(new Line2D.Double(0, vc, bounds.width, vc));
-		g.draw(new Line2D.Double(bounds.width, vc, hc, 0));
-		g.draw(new Line2D.Double(hc, 0, 0, vc));
+		g.draw(new Line2D.Double(horzMargin, vc, bounds.width - horzMargin, vc));
+		g.draw(new Line2D.Double(bounds.width - horzMargin, vc, hc, vertMargin));
+		g.draw(new Line2D.Double(hc, vertMargin, horzMargin, vc));
 		g.setColor(tempColor);
 		g.setStroke(tempStroke);
 		g.setComposite(tempComposite);

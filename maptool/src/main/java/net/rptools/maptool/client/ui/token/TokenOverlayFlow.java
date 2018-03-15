@@ -103,7 +103,11 @@ public class TokenOverlayFlow {
 	 * @return The bounds used to paint the state.
 	 */
 	public Rectangle2D getStateBounds2D(Rectangle bounds, Token token, String state) {
-
+		int horzMargin = BooleanTokenOverlay.GetHorizontalMargin(bounds) / 5;
+		int vertMargin = BooleanTokenOverlay.GetVerticalMargin(bounds) / 5;		
+		
+		Rectangle adjustedBounds = new Rectangle(bounds.x + horzMargin, bounds.y + vertMargin, bounds.width - (horzMargin * 2), bounds.height - (vertMargin * 2));
+		
 		// Find the list of states already drawn on the token
 		List<String> states = savedStates.get(token.getId());
 		if (states == null) {
@@ -147,9 +151,12 @@ public class TokenOverlayFlow {
 		} // endif
 		int row = gridSize - 1 - (index / gridSize); // Start at bottom
 		int col = gridSize - 1 - (index % gridSize); // Start at right
+		
+		//double horzMargin = 0; // size * bounds.width * BooleanTokenOverlay.MARGIN;
+		//double vertMargin = 0; // size * bounds.height * BooleanTokenOverlay.MARGIN;
 
 		// Build the rectangle from the passed bounds
-		return new Rectangle2D.Double(offsets[col] * bounds.width + bounds.x, offsets[row] * bounds.height + bounds.y, size * bounds.width, size * bounds.height);
+		return new Rectangle2D.Double(offsets[col] * adjustedBounds.width + adjustedBounds.x + (horzMargin / 2), offsets[row] * adjustedBounds.height + adjustedBounds.y + (vertMargin / 2), size * adjustedBounds.width - horzMargin, size * adjustedBounds.height - vertMargin);
 	}
 
 	/**

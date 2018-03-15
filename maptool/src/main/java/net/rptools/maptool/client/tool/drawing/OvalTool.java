@@ -87,7 +87,21 @@ public class OvalTool extends AbstractDrawingTool implements MouseMotionListener
 			if (oval == null) {
 				originPoint = zp;
 				oval = createRect(zp, zp);
-			} else {
+			}
+
+			setIsEraser(isEraser(e));
+		}
+
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			ZonePoint zp = getPoint(e);
+
+			if (oval != null) {
 				oval = createRect(originPoint, zp);
 
 				// Draw from center if ALT is held down
@@ -109,23 +123,15 @@ public class OvalTool extends AbstractDrawingTool implements MouseMotionListener
 			setIsEraser(isEraser(e));
 		}
 
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-
 		if (oval == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
-	 */
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		if (oval != null) {
+		else {
 
 			ZonePoint sp = getPoint(e);
 

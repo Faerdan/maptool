@@ -116,7 +116,18 @@ public class CrossTopologyTool extends AbstractDrawingTool implements MouseMotio
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (cross == null) {
 				cross = new Cross(zp.x, zp.y, zp.x, zp.y);
-			} else {
+			}
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		ZonePoint zp = getPoint(e);
+
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			if (cross != null) {
 				cross.getEndPoint().x = zp.x;
 				cross.getEndPoint().y = zp.y;
 
@@ -146,7 +157,7 @@ public class CrossTopologyTool extends AbstractDrawingTool implements MouseMotio
 			}
 			setIsEraser(isEraser(e));
 		}
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -154,10 +165,6 @@ public class CrossTopologyTool extends AbstractDrawingTool implements MouseMotio
 		if (cross == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 		setIsEraser(isEraser(e));
 
 		ZonePoint p = getPoint(e);

@@ -111,7 +111,17 @@ public class HollowDiamondTopologyTool extends AbstractDrawingTool implements Mo
 			if (diamond == null) {
 				originPoint = zp;
 				diamond = createHollowDiamond(originPoint, originPoint, getPen());
-			} else {
+			}
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		ZonePoint zp = getPoint(e);
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			if (diamond != null) {
 				diamond = createHollowDiamond(originPoint, zp, getPen());
 				//diamond = createDiamond(originPoint, zp);
 
@@ -135,7 +145,7 @@ public class HollowDiamondTopologyTool extends AbstractDrawingTool implements Mo
 			}
 			setIsEraser(isEraser(e));
 		}
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -143,10 +153,6 @@ public class HollowDiamondTopologyTool extends AbstractDrawingTool implements Mo
 		if (diamond == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 		setIsEraser(isEraser(e));
 
 		ZonePoint zp = getPoint(e);

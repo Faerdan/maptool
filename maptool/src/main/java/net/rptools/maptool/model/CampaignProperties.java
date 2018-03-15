@@ -340,15 +340,15 @@ public class CampaignProperties {
 
 	private void initTokenStatesMap() {
 		tokenStates = new LinkedHashMap<String, BooleanTokenOverlay>();
-		tokenStates.put("Dead", (new XTokenOverlay("Dead", Color.RED, 5)));
-		tokenStates.put("Disabled", (new XTokenOverlay("Disabled", Color.GRAY, 5)));
+		tokenStates.put("Dead", (new XTokenOverlay("Dead", Color.RED, 4)));
+		tokenStates.put("Disabled", (new XTokenOverlay("Disabled", Color.GRAY, 4)));
 		tokenStates.put("Hidden", (new ShadedTokenOverlay("Hidden", Color.BLACK)));
-		tokenStates.put("Prone", (new OTokenOverlay("Prone", Color.BLUE, 5)));
-		tokenStates.put("Incapacitated", (new OTokenOverlay("Incapacitated", Color.RED, 5)));
+		tokenStates.put("Prone", (new OTokenOverlay("Prone", Color.BLUE, 3)));
+		tokenStates.put("Incapacitated", (new OTokenOverlay("Incapacitated", Color.RED, 3)));
 		tokenStates.put("Other", (new ColorDotTokenOverlay("Other", Color.RED, null)));
-		tokenStates.put("Other2", (new DiamondTokenOverlay("Other2", Color.RED, 5)));
-		tokenStates.put("Other3", (new YieldTokenOverlay("Other3", Color.YELLOW, 5)));
-		tokenStates.put("Other4", (new TriangleTokenOverlay("Other4", Color.MAGENTA, 5)));
+		tokenStates.put("Other2", (new DiamondTokenOverlay("Other2", Color.RED, 3)));
+		tokenStates.put("Other3", (new YieldTokenOverlay("Other3", Color.YELLOW, 3)));
+		tokenStates.put("Other4", (new TriangleTokenOverlay("Other4", Color.MAGENTA, 3)));
 	}
 
 	private void initTokenBarsMap() {

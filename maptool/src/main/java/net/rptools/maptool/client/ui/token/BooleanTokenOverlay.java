@@ -27,7 +27,19 @@ public abstract class BooleanTokenOverlay extends AbstractTokenOverlay {
 
 	/*---------------------------------------------------------------------------------------------
 	 * Constructors
-	 *-------------------------------------------------------------------------------------------*/
+	 *-------------------------------------------------------------------------------------------*/	 
+	 
+	public static final float MARGIN = 0.25f;
+	
+	public static int GetHorizontalMargin(Rectangle bounds)
+	{
+		return Math.round(bounds.width * MARGIN);
+	}
+	
+	public static int GetVerticalMargin(Rectangle bounds)
+	{
+		return Math.round(bounds.height * MARGIN);
+	}
 
 	/**
 	 * Create an overlay with the passed name.
@@ -48,7 +60,9 @@ public abstract class BooleanTokenOverlay extends AbstractTokenOverlay {
 	@Override
 	public void paintOverlay(Graphics2D g, Token token, Rectangle bounds, Object value) {
 		if (AbstractTokenAccessorFunction.getBooleanValue(value))
+		{
 			paintOverlay(g, token, bounds);
+		}
 	}
 
 	/*---------------------------------------------------------------------------------------------

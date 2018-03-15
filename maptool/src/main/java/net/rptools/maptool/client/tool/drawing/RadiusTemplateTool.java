@@ -294,13 +294,15 @@ public class RadiusTemplateTool extends AbstractDrawingTool implements MouseMoti
 		if (!anchorSet) {
 			setCellAtMouse(e, vertex);
 			controlOffset = null;
-
+			anchorSet = true;
+			return;
+		}
+		
+		if (SwingUtil.isControlDown(e)) {
 			// Move the anchor if control pressed.
-		} else if (SwingUtil.isControlDown(e)) {
 			handleControlOffset(e, vertex);
-
+		} else {		
 			// Set the radius and repaint
-		} else {
 			setRadiusFromAnchor(e);
 			renderer.repaint();
 			controlOffset = null;
@@ -315,8 +317,8 @@ public class RadiusTemplateTool extends AbstractDrawingTool implements MouseMoti
 	 * @see net.rptools.maptool.client.tool.DefaultTool#mouseMoved(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void mouseMoved(MouseEvent e) {
-		super.mouseMoved(e);
+	public void mouseDragged(MouseEvent e) {
+		super.mouseDragged(e);
 		handleMouseMovement(e);
 	}
 
@@ -330,7 +332,7 @@ public class RadiusTemplateTool extends AbstractDrawingTool implements MouseMoti
 	 */
 	@Override
 	public void paintOverlay(ZoneRenderer renderer, Graphics2D g) {
-		if (painting && renderer != null) {
+		if (/*painting &&*/ renderer != null) {
 			Pen pen = getPenForOverlay();
 			AffineTransform old = g.getTransform();
 			g.setTransform(getPaintTransform(renderer));
@@ -415,19 +417,31 @@ public class RadiusTemplateTool extends AbstractDrawingTool implements MouseMoti
 	@Override
 	public void mousePressed(MouseEvent e) {
 		super.mousePressed(e);
-		if (!painting)
-			return;
+		/*if (!painting)
+			return;*/
 
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			// Need to set the anchor?
 			controlOffset = null;
-			if (!anchorSet) {
+			/*if (!anchorSet) {
 				anchorSet = true;
 				return;
-			} // endif
+			} // endif*/
+		}
+	}
 
+	/**
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		super.mouseReleased(e);
+		/*if (!painting)
+			return;*/
+
+		if (SwingUtilities.isLeftMouseButton(e)) {
 			// Need to finish the radius?
-			if (!painting || template.getRadius() < AbstractTemplate.MIN_RADIUS)
+			if (/*!painting || */template.getRadius() < AbstractTemplate.MIN_RADIUS)
 				return;
 
 			// Set the eraser, set the drawable, reset the tool.

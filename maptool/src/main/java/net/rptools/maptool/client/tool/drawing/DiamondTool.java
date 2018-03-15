@@ -76,7 +76,17 @@ public class DiamondTool extends AbstractDrawingTool implements MouseMotionListe
 			if (diamond == null) {
 				originPoint = zp;
 				diamond = createDiamond(originPoint, originPoint);
-			} else {
+			}
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		ZonePoint zp = getPoint(e);
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			if (diamond != null) {
 				diamond = createDiamond(originPoint, zp);
 
 				if (diamond.getBounds().width == 0 || diamond.getBounds().height == 0) {
@@ -90,7 +100,7 @@ public class DiamondTool extends AbstractDrawingTool implements MouseMotionListe
 			}
 			setIsEraser(isEraser(e));
 		}
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -98,11 +108,6 @@ public class DiamondTool extends AbstractDrawingTool implements MouseMotionListe
 		if (diamond == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		super.mouseMoved(e);
 
 		if (diamond != null) {
 			ZonePoint p = getPoint(e);

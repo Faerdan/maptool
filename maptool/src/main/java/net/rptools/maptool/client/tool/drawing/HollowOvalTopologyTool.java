@@ -120,7 +120,20 @@ public class HollowOvalTopologyTool extends AbstractDrawingTool implements Mouse
 			if (oval == null) {
 				oval = new Oval(zp.x, zp.y, zp.x, zp.y);
 				originPoint = zp;
-			} else {
+			}
+
+			setIsEraser(isEraser(e));
+		}
+
+		super.mousePressed(e);
+	}
+
+	public void mouseReleased(MouseEvent e) {
+
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			ZonePoint zp = getPoint(e);
+
+			if (oval != null) {
 				oval.getEndPoint().x = zp.x;
 				oval.getEndPoint().y = zp.y;
 
@@ -153,18 +166,14 @@ public class HollowOvalTopologyTool extends AbstractDrawingTool implements Mouse
 			setIsEraser(isEraser(e));
 		}
 
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-
 		if (oval == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	public void mouseMoved(MouseEvent e) {
 
 		setIsEraser(isEraser(e));
 

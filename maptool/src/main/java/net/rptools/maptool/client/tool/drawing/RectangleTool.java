@@ -81,7 +81,17 @@ public class RectangleTool extends AbstractDrawingTool implements MouseMotionLis
 			if (rectangle == null) {
 				originPoint = zp;
 				rectangle = createRect(originPoint, originPoint);
-			} else {
+			} 
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		ZonePoint zp = getPoint(e);
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			if (rectangle != null) {
 				rectangle = createRect(originPoint, zp);
 
 				if (rectangle.width == 0 || rectangle.height == 0) {
@@ -114,13 +124,7 @@ public class RectangleTool extends AbstractDrawingTool implements MouseMotionLis
 		if (rectangle == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		super.mouseMoved(e);
-
-		if (rectangle != null) {
+		else {
 			ZonePoint p = getPoint(e);
 			rectangle = createRect(originPoint, p);
 
@@ -137,6 +141,11 @@ public class RectangleTool extends AbstractDrawingTool implements MouseMotionLis
 			}
 			renderer.repaint();
 		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		super.mouseMoved(e);
 	}
 
 	/**

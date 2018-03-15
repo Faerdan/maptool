@@ -107,11 +107,20 @@ public class OvalTopologyTool extends AbstractDrawingTool implements MouseMotion
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			ZonePoint zp = getPoint(e);
-
 			if (oval == null) {
 				oval = new Oval(zp.x, zp.y, zp.x, zp.y);
 				originPoint = zp;
-			} else {
+			}
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			ZonePoint zp = getPoint(e);
+			if (oval != null) {
 				oval.getEndPoint().x = zp.x;
 				oval.getEndPoint().y = zp.y;
 
@@ -129,7 +138,7 @@ public class OvalTopologyTool extends AbstractDrawingTool implements MouseMotion
 			}
 			setIsEraser(isEraser(e));
 		}
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -137,10 +146,6 @@ public class OvalTopologyTool extends AbstractDrawingTool implements MouseMotion
 		if (oval == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 		setIsEraser(isEraser(e));
 		if (oval != null) {
 			ZonePoint sp = getPoint(e);

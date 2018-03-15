@@ -111,7 +111,18 @@ public class RectangleTopologyTool extends AbstractDrawingTool implements MouseM
 
 			if (rectangle == null) {
 				rectangle = new Rectangle(sp.x, sp.y, sp.x, sp.y);
-			} else {
+			}
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			ZonePoint sp = getPoint(e);
+
+			if (rectangle != null) {
 				rectangle.getEndPoint().x = sp.x;
 				rectangle.getEndPoint().y = sp.y;
 
@@ -135,7 +146,7 @@ public class RectangleTopologyTool extends AbstractDrawingTool implements MouseM
 			}
 			setIsEraser(isEraser(e));
 		}
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -143,10 +154,6 @@ public class RectangleTopologyTool extends AbstractDrawingTool implements MouseM
 		if (rectangle == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 		setIsEraser(isEraser(e));
 
 		ZonePoint p = getPoint(e);

@@ -46,7 +46,7 @@ public abstract class AbstractDrawingTool extends DefaultTool implements ZoneOve
 	private static final long serialVersionUID = 9121558405484986225L;
 
 	private boolean isEraser;
-	private boolean isSnapToGridSelected;
+	private boolean isSnapToGridSelected = true;
 	private boolean isEraseSelected;
 	private static LayerSelectionDialog layerSelectionDialog;
 

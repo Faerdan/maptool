@@ -53,16 +53,25 @@ public class LineTool extends AbstractLineTool implements MouseMotionListener {
 			if (getLine() == null) {
 				startLine(e);
 				setIsEraser(isEraser(e));
-			} else {
-				tempPoint = null;
-				stopLine(e);
 			}
 		} else if (getLine() != null) {
 			// Create a joint
-			tempPoint = null;
-			return;
+			if (tempPoint != null) {
+				removePoint(tempPoint);
+				tempPoint = null;
+			}
+			stopLine(e);
 		}
 		super.mousePressed(e);
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			if (getLine() != null) {
+				tempPoint = null;
+			}
+		} 
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -70,16 +79,22 @@ public class LineTool extends AbstractLineTool implements MouseMotionListener {
 		if (getLine() == null) {
 			super.mouseDragged(e);
 		}
+		else {
+			if (tempPoint != null) {
+				removePoint(tempPoint);
+			}
+			tempPoint = addPoint(e);
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		super.mouseMoved(e);
 		if (getLine() != null) {
 			if (tempPoint != null) {
 				removePoint(tempPoint);
 			}
 			tempPoint = addPoint(e);
 		}
-		super.mouseMoved(e);
 	}
 }

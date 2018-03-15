@@ -84,8 +84,8 @@ public class WallTemplateTool extends BurstTemplateTool {
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (!painting)
-			return;
+		/*if (!painting)
+			return;*/
 
 		// Set up the path when the anchor is pressed.
 		if (SwingUtilities.isLeftMouseButton(e) && !anchorSet) {
@@ -108,44 +108,48 @@ public class WallTemplateTool extends BurstTemplateTool {
 		if (!anchorSet) {
 			setCellAtMouse(e, vertex);
 			controlOffset = null;
-
+			anchorSet = true;
+			return;
 			// Move the anchor if control pressed.
-		} else if (SwingUtil.isControlDown(e)) {
+		} 
+		
+		if (SwingUtil.isControlDown(e)) {
 			handleControlOffset(e, vertex);
-
-			// Add or delete a new cell
-		} else {
-
-			// Get mouse point as an offset from the vertex
-			LineTemplate lt = ((LineTemplate) template);
-			ZonePoint mouse = new ScreenPoint(e.getX(), e.getY()).convertToZone(renderer);
-			CellPoint mousePoint = renderer.getZone().getGrid().convert(mouse);
-			CellPoint vertexPoint = renderer.getZone().getGrid().convert(lt.getVertex());
-			mousePoint.x = mousePoint.x - vertexPoint.x;
-			mousePoint.y = mousePoint.y - vertexPoint.y;
-
-			// Compare to the second to last point, if == delete last point
-			List<CellPoint> path = lt.getPath();
-			CellPoint lastPoint = path.get(path.size() - 1);
-			int dx = mousePoint.x - lastPoint.x;
-			int dy = mousePoint.y - lastPoint.y;
-			if (dx != 0 && dy == 0 || dy != 0 && dx == 0) {
-				int count = Math.max(Math.abs(dy), Math.abs(dx));
-				dx = dx == 0 ? 0 : dx / Math.abs(dx);
-				dy = dy == 0 ? 0 : dy / Math.abs(dy);
-				for (int i = 1; i <= count; i++) {
-					CellPoint current = lt.getPointFromPool(lastPoint.x + dx * i, lastPoint.y + dy * i);
-					if (path.size() > 1 && path.get(path.size() - 2).equals(current)) {
-						lt.addPointToPool(path.remove(path.size() - 1));
-						lt.addPointToPool(current);
-					} else {
-						path.add(current);
-					} // endif
-				} // endfor
-			} // endif
-			renderer.repaint();
+		}
+		else
+		{			
 			controlOffset = null;
+		}
+
+		// Add or delete a new cell
+		// Get mouse point as an offset from the vertex
+		LineTemplate lt = ((LineTemplate) template);
+		ZonePoint mouse = new ScreenPoint(e.getX(), e.getY()).convertToZone(renderer);
+		CellPoint mousePoint = renderer.getZone().getGrid().convert(mouse);
+		CellPoint vertexPoint = renderer.getZone().getGrid().convert(lt.getVertex());
+		mousePoint.x = mousePoint.x - vertexPoint.x;
+		mousePoint.y = mousePoint.y - vertexPoint.y;
+
+		// Compare to the second to last point, if == delete last point
+		List<CellPoint> path = lt.getPath();
+		CellPoint lastPoint = path.get(path.size() - 1);
+		int dx = mousePoint.x - lastPoint.x;
+		int dy = mousePoint.y - lastPoint.y;
+		if (dx != 0 && dy == 0 || dy != 0 && dx == 0) {
+			int count = Math.max(Math.abs(dy), Math.abs(dx));
+			dx = dx == 0 ? 0 : dx / Math.abs(dx);
+			dy = dy == 0 ? 0 : dy / Math.abs(dy);
+			for (int i = 1; i <= count; i++) {
+				CellPoint current = lt.getPointFromPool(lastPoint.x + dx * i, lastPoint.y + dy * i);
+				if (path.size() > 1 && path.get(path.size() - 2).equals(current)) {
+					lt.addPointToPool(path.remove(path.size() - 1));
+					lt.addPointToPool(current);
+				} else {
+					path.add(current);
+				} // endif
+			} // endfor
 		} // endif
+		renderer.repaint();
 	}
 
 	/**

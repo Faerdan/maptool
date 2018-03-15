@@ -90,7 +90,7 @@ public abstract class AbstractLineTool extends AbstractDrawingTool {
 	protected void stopLine(MouseEvent e) {
 		if (line == null)
 			return; // Escape has been pressed
-		addPoint(e);
+		//addPoint(e);
 
 		Drawable drawable = line;
 		if (isBackgroundFill(e) && line.getPoints().size() > 3) { // TODO: There's a bug where the last point is duplicated, hence 3 points

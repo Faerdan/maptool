@@ -68,6 +68,8 @@ public class OTokenOverlay extends XTokenOverlay {
 	 */
 	@Override
 	public void paintOverlay(Graphics2D g, Token aToken, Rectangle bounds) {
+		int horzMargin = BooleanTokenOverlay.GetHorizontalMargin(bounds);
+		
 		Color tempColor = g.getColor();
 		g.setColor(getColor());
 		Stroke tempStroke = g.getStroke();
@@ -75,8 +77,8 @@ public class OTokenOverlay extends XTokenOverlay {
 		Composite tempComposite = g.getComposite();
 		if (getOpacity() != 100)
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getOpacity() / 100));
-		double offset = getStroke().getLineWidth() / 2.0;
-		g.draw(new Ellipse2D.Double(0 + offset, 0 + offset, bounds.width - offset * 2, bounds.height - offset * 2));
+		double offset = (getStroke().getLineWidth() / 2.0) + horzMargin;
+		g.draw(new Ellipse2D.Double(0 + offset, 0 + offset, (bounds.width) - offset * 2, (bounds.height) - offset * 2));
 		g.setColor(tempColor);
 		g.setStroke(tempStroke);
 		g.setComposite(tempComposite);

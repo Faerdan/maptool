@@ -68,6 +68,9 @@ public class CrossTokenOverlay extends XTokenOverlay {
 	 */
 	@Override
 	public void paintOverlay(Graphics2D g, Token aToken, Rectangle bounds) {
+		int horzMargin = Math.round(BooleanTokenOverlay.GetHorizontalMargin(bounds) * 1.01f);
+		int vertMargin = Math.round(BooleanTokenOverlay.GetVerticalMargin(bounds) * 1.01f);
+		
 		Color tempColor = g.getColor();
 		g.setColor(getColor());
 		Stroke tempStroke = g.getStroke();
@@ -75,8 +78,8 @@ public class CrossTokenOverlay extends XTokenOverlay {
 		Composite tempComposite = g.getComposite();
 		if (getOpacity() != 100)
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getOpacity() / 100));
-		g.draw(new Line2D.Double(0, (double) bounds.height / 2, bounds.width, (double) bounds.height / 2));
-		g.draw(new Line2D.Double((double) bounds.width / 2, 0, (double) bounds.width / 2, bounds.height));
+		g.draw(new Line2D.Double(horzMargin, ((double) bounds.height / 2), bounds.width - horzMargin, ((double) bounds.height / 2)));
+		g.draw(new Line2D.Double(((double) bounds.width / 2), vertMargin, ((double) bounds.width / 2), bounds.height - vertMargin));
 		g.setColor(tempColor);
 		g.setStroke(tempStroke);
 		g.setComposite(tempComposite);

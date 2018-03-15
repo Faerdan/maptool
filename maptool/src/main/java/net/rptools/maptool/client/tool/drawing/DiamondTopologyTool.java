@@ -110,7 +110,18 @@ public class DiamondTopologyTool extends AbstractDrawingTool implements MouseMot
 			if (diamond == null) {
 				originPoint = zp;
 				diamond = createDiamond(originPoint, originPoint);
-			} else {
+			}
+			setIsEraser(isEraser(e));
+		}
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			ZonePoint zp = getPoint(e);
+
+			if (diamond != null) {
 				diamond = createDiamond(originPoint, zp);
 
 				if (diamond.getBounds().width == 0 || diamond.getBounds().height == 0) {
@@ -133,7 +144,7 @@ public class DiamondTopologyTool extends AbstractDrawingTool implements MouseMot
 			}
 			setIsEraser(isEraser(e));
 		}
-		super.mousePressed(e);
+		super.mouseReleased(e);
 	}
 
 	@Override
@@ -141,10 +152,6 @@ public class DiamondTopologyTool extends AbstractDrawingTool implements MouseMot
 		if (diamond == null) {
 			super.mouseDragged(e);
 		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 		setIsEraser(isEraser(e));
 
 		ZonePoint zp = getPoint(e);
