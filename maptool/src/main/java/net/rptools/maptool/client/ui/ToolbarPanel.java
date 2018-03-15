@@ -71,7 +71,10 @@ public class ToolbarPanel extends JToolBar {
 	private final Toolbox toolbox;
 
 	public ToolbarPanel(Toolbox tbox) {
+		setFloatable(false);
 		setRollover(true);
+		setBorder(null);
+		setBorderPainted(false);
 
 		toolbox = tbox;
 		optionPanel = new JPanel(new CardLayout());
@@ -91,6 +94,9 @@ public class ToolbarPanel extends JToolBar {
 		final Component horizontalSpacer = Box.createVerticalStrut(10);
 		horizontalSpacer.setVisible(false);
 
+		add(createZoneSelectionButton());
+		add(vertSpacer);
+		add(horizontalSpacer);
 		add(pointerGroupButton);
 		add(createButton("net/rptools/maptool/client/image/tool/draw-blue.png", "net/rptools/maptool/client/image/tool/draw-blue-off.png", createDrawPanel(), I18N.getText("tools.drawing.tooltip")));
 		add(createButton("net/rptools/maptool/client/image/tool/temp-blue.png", "net/rptools/maptool/client/image/tool/temp-blue-off.png", createTemplatePanel(),
@@ -103,7 +109,6 @@ public class ToolbarPanel extends JToolBar {
 		add(horizontalSpacer);
 		add(optionPanel);
 		add(Box.createGlue());
-		add(createZoneSelectionButton());
 
 		// Non visible tools
 		tbox.createTool(GridTool.class);
@@ -131,7 +136,7 @@ public class ToolbarPanel extends JToolBar {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ZoneSelectionPopup popup = new ZoneSelectionPopup();
-				popup.show(button, button.getSize().width - popup.getPreferredSize().width, 0);
+				popup.show(button, 10 + (button.getSize().width - popup.getPreferredSize().width), 0);
 
 			}
 		});

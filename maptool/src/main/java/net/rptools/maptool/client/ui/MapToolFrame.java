@@ -344,6 +344,12 @@ public class MapToolFrame extends DefaultDockableHolder implements WindowListene
 		//		zoneRendererPanel.add(getChatTypingLabel(), PositionalLayout.Position.NW);
 		zoneRendererPanel.add(getChatTypingPanel(), PositionalLayout.Position.NW);
 		zoneRendererPanel.add(getChatActionLabel(), PositionalLayout.Position.SW);
+		
+		ToolbarPanel toolbarPanel = new ToolbarPanel(getToolbox());	
+		toolbarPanel.setSize(600, 40);
+		zoneRendererPanel.add(toolbarPanel, PositionalLayout.Position.NW);
+		
+		//zoneRendererPanel.add(new ToolbarPanel(toolbox), PositionalLayout.Position.NW);
 
 		commandPanel = new CommandPanel();
 		MapTool.getMessageList().addObserver(commandPanel);
@@ -354,7 +360,7 @@ public class MapToolFrame extends DefaultDockableHolder implements WindowListene
 
 		// Put it all together
 		setJMenuBar(menuBar);
-		add(BorderLayout.NORTH, new ToolbarPanel(toolbox));
+		//add(BorderLayout.NORTH, new ToolbarPanel(toolbox));
 		add(BorderLayout.SOUTH, statusPanel);
 
 		JLayeredPane glassPaneComposite = new JLayeredPane();
@@ -1326,14 +1332,19 @@ public class MapToolFrame extends DefaultDockableHolder implements WindowListene
 		Rectangle bounds = graphicsConfig.getBounds();
 
 		fullScreenFrame = new FullScreenFrame();
-		fullScreenFrame.add(zoneRendererPanel);
+		
+		/*ToolbarPanel toolbarPanel = new ToolbarPanel(getToolbox());	
+		toolbarPanel.setSize(400, 100);
+		fullScreenFrame.add(toolbarPanel);*/
+		
+		fullScreenFrame.add(zoneRendererPanel);	
 
 		// Under mac os x this does not properly hide the menu bar so adjust top and height
 		// so menu bar does not overlay screen.
 		if (MapTool.MAC_OS_X) {
 			fullScreenFrame.setBounds(bounds.x, bounds.y + 21, bounds.width, bounds.height - 21);
 		} else {
-			fullScreenFrame.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+			fullScreenFrame.setBounds(bounds.x, bounds.y, bounds.width, bounds.height * 2); // * 2 to cover both touch screens!
 		}
 		fullScreenFrame.setJMenuBar(menuBar);
 		// Menu bar is visible anyways on MAC so leave menu items on it
