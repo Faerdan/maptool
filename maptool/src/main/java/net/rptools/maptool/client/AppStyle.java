@@ -25,7 +25,7 @@ import net.rptools.lib.swing.ImageBorder;
 public class AppStyle {
 
 	public static ImageBorder border = ImageBorder.GRAY;
-	public static ImageBorder selectedBorder = ImageBorder.RED;
+	public static ImageBorder selectedBorder = new ImageBorder("net/rptools/maptool/client/image/border/selected"); // ImageBorder.RED;
 	public static ImageBorder selectedStampBorder = ImageBorder.BLUE;
 	public static ImageBorder selectedUnownedBorder = AppConstants.GREEN_BORDER;
 	public static ImageBorder miniMapBorder = AppConstants.GRAY_BORDER;

@@ -51,8 +51,8 @@ public class LineTool extends AbstractLineTool implements MouseMotionListener {
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (getLine() == null) {
-				startLine(e);
 				setIsEraser(isEraser(e));
+				startLine(e);
 			}
 		} else if (getLine() != null) {
 			// Create a joint

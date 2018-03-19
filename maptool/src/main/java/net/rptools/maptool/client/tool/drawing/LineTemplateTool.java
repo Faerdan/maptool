@@ -153,6 +153,9 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 
 		if (SwingUtilities.isLeftMouseButton(e)) {
 
+			// Set the eraser
+			setIsEraser(isEraser(e));
+
 			// Need to set the anchor?
 			controlOffset = null;
 			if (!anchorSet) {
@@ -181,6 +184,8 @@ public class LineTemplateTool extends RadiusTemplateTool implements PropertyChan
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		// Set the eraser
+		setIsEraser(isEraser(e));
 		super.mouseReleased(e);
 	}
 

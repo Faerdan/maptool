@@ -50,8 +50,8 @@ public class FreehandTool extends AbstractLineTool implements MouseMotionListene
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			startLine(e);
 			setIsEraser(isEraser(e));
+			startLine(e);
 		}
 		super.mousePressed(e);
 	}

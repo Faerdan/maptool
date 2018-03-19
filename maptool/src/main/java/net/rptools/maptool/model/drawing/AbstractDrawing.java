@@ -46,7 +46,7 @@ public abstract class AbstractDrawing implements Drawable, ImageObserver {
 			pen = Pen.DEFAULT;
 		}
 		Stroke oldStroke = g.getStroke();
-		g.setStroke(new BasicStroke(pen.getThickness(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g.setStroke(new BasicStroke(pen.isEraser() ? pen.getThickness() * 1.25f : pen.getThickness(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
 		Composite oldComposite = g.getComposite();
 		if (pen.isEraser()) {

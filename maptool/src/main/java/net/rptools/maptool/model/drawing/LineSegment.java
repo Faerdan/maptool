@@ -19,6 +19,7 @@ import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
+import net.rptools.maptool.model.drawing.Pen;
 
 /**
  * @author drice
@@ -29,9 +30,10 @@ public class LineSegment extends AbstractDrawing {
 	private transient int lastPointCount = -1;
 	private transient Rectangle cachedBounds;
 	private transient Area area;
+	private Pen pen;
 
-	public LineSegment(float width) {
-		this.width = width;
+	public LineSegment(Pen pen) {
+		this.pen = pen;
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class LineSegment extends AbstractDrawing {
 			}
 			gp.lineTo(point.x, point.y);
 		}
-		BasicStroke stroke = new BasicStroke(width != null ? width : 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+		BasicStroke stroke = new BasicStroke(pen.isEraser() ? pen.getThickness() * 1.25f : pen.getThickness(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 		return new Area(stroke.createStrokedShape(gp));
 	}
 

@@ -137,7 +137,8 @@ public abstract class AbstractDrawingTool extends DefaultTool implements ZoneOve
 		renderer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 
 		MapTool.getFrame().getColorPicker().setSnapSelected(isSnapToGridSelected);
-		MapTool.getFrame().getColorPicker().setEraseSelected(isEraseSelected);
+		//MapTool.getFrame().getColorPicker().setEraseSelected(isEraseSelected);
+		MapTool.getFrame().getColorPicker().setEraseSelected(false);
 		super.attachTo(renderer);
 	}
 
@@ -147,7 +148,7 @@ public abstract class AbstractDrawingTool extends DefaultTool implements ZoneOve
 		renderer.setCursor(Cursor.getDefaultCursor());
 
 		isSnapToGridSelected = MapTool.getFrame().getColorPicker().isSnapSelected();
-		isEraseSelected = MapTool.getFrame().getColorPicker().isEraseSelected();
+		//isEraseSelected = MapTool.getFrame().getColorPicker().isEraseSelected();
 
 		super.detachFrom(renderer);
 	}

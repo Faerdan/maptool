@@ -201,6 +201,7 @@ public class RadiusTemplateTool extends AbstractDrawingTool implements MouseMoti
 		if (pen.isEraser()) {
 			pen.setEraser(false);
 			pen.setPaint(new DrawableColorPaint(Color.WHITE));
+			pen.setBackgroundPaint(new DrawableColorPaint(Color.WHITE));
 		} // endif
 		return pen;
 	}
@@ -421,6 +422,10 @@ public class RadiusTemplateTool extends AbstractDrawingTool implements MouseMoti
 			return;*/
 
 		if (SwingUtilities.isLeftMouseButton(e)) {
+
+			// Set the eraser
+			setIsEraser(isEraser(e));
+			
 			// Need to set the anchor?
 			controlOffset = null;
 			/*if (!anchorSet) {
