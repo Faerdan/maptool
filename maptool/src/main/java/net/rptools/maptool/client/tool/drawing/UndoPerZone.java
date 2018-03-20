@@ -111,6 +111,11 @@ public class UndoPerZone implements ModelChangeListener {
 		if (log.isDebugEnabled())
 			log.debug("Undoing last change on zone " + zone.getName());
 		manager.undo();
+		if (!canUndo())
+		{
+			log.debug("No more undos on zone " + zone.getName());
+			redo();
+		}
 	}
 
 	/**

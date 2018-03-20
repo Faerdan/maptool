@@ -19,7 +19,6 @@ import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
-import net.rptools.maptool.model.drawing.Pen;
 
 /**
  * @author drice
@@ -27,13 +26,14 @@ import net.rptools.maptool.model.drawing.Pen;
 public class LineSegment extends AbstractDrawing {
 	private final List<Point> points = new ArrayList<Point>();
 	private Float width;
+	private boolean isEraser;
 	private transient int lastPointCount = -1;
 	private transient Rectangle cachedBounds;
 	private transient Area area;
-	private Pen pen;
 
-	public LineSegment(Pen pen) {
-		this.pen = pen;
+	public LineSegment(float width, boolean isEraser) {
+		this.width = width;
+		this.isEraser = isEraser;
 	}
 
 	/**
@@ -64,7 +64,16 @@ public class LineSegment extends AbstractDrawing {
 			}
 			gp.lineTo(point.x, point.y);
 		}
-		BasicStroke stroke = new BasicStroke(pen.isEraser() ? pen.getThickness() * 1.25f : pen.getThickness(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+		float thickness = 2;
+		if (width != null)
+		{
+			thickness = width;
+		}
+		if (isEraser)
+		{
+			thickness += 2f;
+		}
+		BasicStroke stroke = new BasicStroke(thickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 		return new Area(stroke.createStrokedShape(gp));
 	}
 
